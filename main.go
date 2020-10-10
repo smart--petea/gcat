@@ -3,14 +3,32 @@ package main
 import (
     "os"
     "fmt"
+    "bufio"
+    "log"
 
     gcat "gcat/src"
 )
 
 func main() {
-    files, params := gcat.ParseArgs(os.Args[1:])
+    fileNames, _ := gcat.ParseArgs(os.Args[1:])
 
-    fmt.Println(files)
-    fmt.Println(params)
+    for _, fileName := range fileNames {
+        file, err := os.Open(fileName)
+        if err != nil {
+            log.Fatal(err)
+        }
+
+
+        scanner := bufio.NewScanner(file)
+        for scanner.Scan() {
+            fmt.Println(scanner.Text())
+        }
+
+        if err := scanner.Err(); err != nil {
+            log.Fatal(err)
+        }
+
+        defer file.Close()
+    }
 }
 
