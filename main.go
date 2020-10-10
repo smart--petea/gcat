@@ -4,11 +4,11 @@ import (
     "os"
     "fmt"
 
-    "github.com/smart--petea/gcat"
+    gcat "gcat/src"
 )
 
 func main() {
-    files, params := parseArgs(os.Args[1:])
+    files, params := gcat.ParseArgs(os.Args[1:])
 
     fmt.Println(files)
     fmt.Println(params)

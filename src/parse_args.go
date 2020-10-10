@@ -1,10 +1,13 @@
 package gcat
 
+import (
+)
+
 func ParseArgs(args []string) (files []string, params *Params) {
     files = make([]string, 0)
     params = &Params{}
 
-    for _, arg := range os.Args[1:] {
+    for _, arg := range args {
         switch arg {
         case "-A":
             params.ShowNonprinting = true
