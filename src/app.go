@@ -4,11 +4,13 @@ import (
     "os"
     "fmt"
     "bufio"
+    "strings"
 )
 
 type App struct {
     Files []string
     Params *Params
+    CurrentLineNumber uint32
 }
 
 func NewApp(args []string) *App {
@@ -38,7 +40,6 @@ func (app *App) GetFile(fileName string) (*os.File, error) {
     return nil, nil
 }
 
-
 func (app *App) Run() {
     for _, file := range app.Files {
         app.PrintFile(file)
@@ -54,7 +55,7 @@ func (app *App) PrintFile(fileName string) error {
 
     scanner := bufio.NewScanner(file)
     for scanner.Scan() {
-        fmt.Println(scanner.Text())
+        app.PrintLine(scanner.Text())
     }
 
     if err := scanner.Err(); err != nil {
@@ -62,4 +63,19 @@ func (app *App) PrintFile(fileName string) error {
     }
 
     return nil
+}
+
+func (app *App) PrintLine(line string) {
+    prefix := "\t"
+    if app.Params.NumberNonBlank {
+        if len(strings.TrimSpace(line)) > 0 {
+            app.CurrentLineNumber = app.CurrentLineNumber + 1
+            prefix = fmt.Sprintf("%s%d ", prefix, app.CurrentLineNumber)
+        }
+    } else if app.Params.NumberAllLines {
+            app.CurrentLineNumber = app.CurrentLineNumber + 1
+            prefix = fmt.Sprintf("%s%d ", prefix, app.CurrentLineNumber)
+    }
+
+    fmt.Printf("%s%s\n", prefix, line)
 }
