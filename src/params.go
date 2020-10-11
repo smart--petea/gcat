@@ -4,9 +4,7 @@ type Params struct {
     NumberNonBlank  bool
     ShowEnd         bool
     NumberAllLines  bool
-    SqeezeBlank     bool
-    ShowTabs        bool
-    ShowNonprinting bool
+    SqueezeBlank     bool
     Help            bool
     Version         bool
 }

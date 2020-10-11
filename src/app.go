@@ -11,6 +11,8 @@ type App struct {
     Files []string
     Params *Params
     CurrentLineNumber uint32
+    PrecedentLine string
+    NotFirstLine bool
 }
 
 func NewApp(args []string) *App {
@@ -66,6 +68,13 @@ func (app *App) PrintFile(fileName string) error {
 }
 
 func (app *App) PrintLine(line string) {
+    if app.Params.SqueezeBlank && app.NotFirstLine && app.PrecedentLine == line {
+        return
+    }
+
+    app.NotFirstLine = true
+    app.PrecedentLine = line
+
     prefix := "\t"
     if app.Params.NumberNonBlank {
         if len(strings.TrimSpace(line)) > 0 {
@@ -77,5 +86,10 @@ func (app *App) PrintLine(line string) {
             prefix = fmt.Sprintf("%s%d ", prefix, app.CurrentLineNumber)
     }
 
-    fmt.Printf("%s%s\n", prefix, line)
+    var sufix string
+    if app.Params.ShowEnd {
+        sufix = "$"
+    }
+
+    fmt.Printf("%s%s%s\n", prefix, line, sufix)
 }
